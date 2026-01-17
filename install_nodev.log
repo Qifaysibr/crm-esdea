@@ -1,0 +1,29 @@
+Installing dependencies from lock file
+Verifying lock file contents can be installed on current platform.
+Package operations: 89 installs, 0 updates, 0 removals
+  - Downloading laravel/framework (v11.47.0)
+  - Downloading phenx/php-svg-lib (0.5.4)
+  - Downloading phenx/php-font-lib (0.5.6)
+  - Downloading dompdf/dompdf (v2.0.8)
+  - Downloading nikic/php-parser (v5.7.0)
+  - Downloading psy/psysh (v0.12.18)
+  - Downloading markbaker/complex (3.0.2)
+  - Downloading maennchen/zipstream-php (3.2.1)
+  - Downloading ezyang/htmlpurifier (v4.19.0)
+  - Downloading composer/pcre (3.3.2)
+  - Downloading phpoffice/phpspreadsheet (1.30.2)
+  - Downloading composer/semver (3.4.4)
+  - Downloading maatwebsite/excel (3.1.67)
+  0/13 [>---------------------------]   0%
+  1/13 [==>-------------------------]   7%
+  2/13 [====>-----------------------]  15%
+  3/13 [======>---------------------]  23%
+  4/13 [========>-------------------]  30%
+  5/13 [==========>-----------------]  38%
+  6/13 [============>---------------]  46%
+  7/13 [===============>------------]  53%
+  8/13 [=================>----------]  61%
+  9/13 [===================>--------]  69%
+ 10/13 [=====================>------]  76%
+ 11/13 [=======================>----]  84%
+ 12/13 [=========================>--]  92%A connection timeout was encountered. If you intend to run Composer without connecting to the internet, run the command again prefixed with COMPOSER_DISABLE_NETWORK=1 to make Composer run in offline mode.
