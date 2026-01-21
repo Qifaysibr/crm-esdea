@@ -17,3 +17,21 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*.php
+/storage/app/public/*
+/storage/debugbar/*.json
+/.phpunit.cache
+
+# Logs
+/storage/logs/*.log
+*.log
+
+# Backups & Local setup
+/config_broken/
+composer.phar
+composer-setup.php
+fix_perms.php
+.DS_Store

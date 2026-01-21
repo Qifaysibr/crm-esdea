@@ -8,6 +8,7 @@ use App\Http\Controllers\EarningsController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\MarketingAssetController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -42,10 +43,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/earnings', [EarningsController::class, 'index'])->name('earnings.index');
     Route::get('/earnings/export', [EarningsController::class, 'export'])->name('earnings.export');
 
-    // Team Monitor (Manager & Admin only)
+    // Team Monitor & User Management (Admin only)
     Route::middleware(['role:manager,admin'])->group(function () {
         Route::get('/team', [TeamController::class, 'index'])->name('team.index');
+        Route::get('/team/export', [TeamController::class, 'export'])->name('team.export');
         Route::get('/team/{user}', [TeamController::class, 'show'])->name('team.show');
+        
+        // Users (Admin only usually, but manager might need access depending on policy)
+        Route::resource('users', UserController::class);
     });
 
     // Marketing Assets

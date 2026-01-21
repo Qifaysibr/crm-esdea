@@ -74,7 +74,9 @@
         <!-- Sales Chart -->
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Tren Penjualan</h3>
-            <canvas id="salesChart"></canvas>
+            <div class="relative h-64 w-full">
+                <canvas id="salesChart"></canvas>
+            </div>
         </div>
     </div>
 

@@ -198,27 +198,30 @@ class LeadController extends Controller
         try {
             $result = $this->importService->import($filePath, auth()->id());
             
-            if ($result['failed'] > 0) {
+            $message = $result['failed'] > 0 
+                ? "{$result['imported']} lead berhasil diimport, {$result['failed']} gagal."
+                : "{$result['imported']} lead berhasil diimport.";
+
+            if ($request->expectsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => "{$result['imported']} lead berhasil diimport, {$result['failed']} gagal",
-                    'errors' => $result['errors'],
+                    'message' => $message,
+                    'errors' => $result['errors'] ?? [],
                     'imported' => $result['imported'],
                     'failed' => $result['failed'],
                 ]);
             }
-            
-            return response()->json([
-                'success' => true,
-                'message' => "{$result['imported']} lead berhasil diimport",
-                'imported' => $result['imported'],
-            ]);
+
+            return back()->with('success', $message);
             
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error: ' . $e->getMessage(),
-            ], 500);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error: ' . $e->getMessage(),
+                ], 500);
+            }
+            return back()->with('error', 'Error: ' . $e->getMessage());
         }
     }
 }

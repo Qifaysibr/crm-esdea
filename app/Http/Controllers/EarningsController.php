@@ -89,7 +89,44 @@ class EarningsController extends Controller
 
     public function export(Request $request)
     {
-        // TODO: Implement PDF/XLSX export
-        return back()->with('info', 'Export feature coming soon');
+        $startDate = $request->input('start_date', now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->input('end_date', now()->endOfMonth()->format('Y-m-d'));
+        
+        $commissions = Commission::with(['invoice', 'invoiceItem', 'role'])
+                                ->whereBetween('calculated_at', [$startDate, $endDate])
+                                ->latest('calculated_at')
+                                ->get();
+
+        $filename = "earnings_report_{$startDate}_to_{$endDate}.csv";
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = ['Date', 'Invoice #', 'Customer', 'Product', 'Type', 'Amount', 'Refund Basis'];
+
+        $callback = function() use($commissions, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($commissions as $comm) {
+                fputcsv($file, [
+                    $comm->calculated_at->format('Y-m-d'),
+                    $comm->invoice->invoice_number,
+                    $comm->invoice->customer_name,
+                    $comm->invoiceItem->product_name ?? '-',
+                    ucfirst($comm->commission_type),
+                    $comm->commission_amount,
+                    $comm->refund_amount
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

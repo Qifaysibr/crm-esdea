@@ -47,6 +47,54 @@ class TeamController extends Controller
         return view('team.index', compact('performance'));
     }
 
+    public function export(Request $request)
+    {
+        $user = auth()->user();
+        $query = User::whereHas('roles', function($q) {
+            $q->whereIn('name', ['sales', 'leader']);
+        });
+        
+        if (!$user->hasRole('admin') && $user->store) {
+            $query->where('store', $user->store);
+        }
+        
+        $members = $query->get();
+        $month = now()->month;
+        $year = now()->year;
+
+        $filename = "team_performance_" . now()->format('Y_m_d') . ".csv";
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = ['Name', 'Store', 'Total Leads', 'Conv. Rate (%)', 'Total Sales', 'Commission Earned'];
+
+        $callback = function() use($members, $columns, $month, $year) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($members as $member) {
+                $m = $this->getMemberMetrics($member, $year, $month);
+                fputcsv($file, [
+                    $member->name,
+                    $member->store ?? 'Global',
+                    $m['total_leads'],
+                    $m['conversion_rate'],
+                    $m['total_sales'],
+                    $m['total_commission']
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
     public function show(User $user)
     {
         $authUser = auth()->user();

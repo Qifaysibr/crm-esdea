@@ -79,6 +79,15 @@
                     </a>
                     @endif
 
+                    @if(auth()->user()->hasRole('admin'))
+                    <a href="{{ route('users.index') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('users.*') ? 'bg-indigo-700' : 'hover:bg-indigo-700' }} transition">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        Users
+                    </a>
+                    @endif
+
                     <a href="{{ route('marketing-assets.index') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('marketing-assets.*') ? 'bg-indigo-700' : 'hover:bg-indigo-700' }} transition">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
@@ -93,9 +102,11 @@
                         <div class="flex-shrink-0 w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center">
                             <span class="text-lg font-semibold">{{ substr(auth()->user()->name, 0, 1) }}</span>
                         </div>
-                        <div class="ml-3 flex-1">
-                            <p class="text-sm font-medium">{{ auth()->user()->name }}</p>
-                            <p class="text-xs text-indigo-200">{{ auth()->user()->roles->first()->display_name ?? 'User' }}</p>
+                        <div class="ml-3 flex-1 overflow-hidden">
+                            <a href="{{ route('profile.edit') }}" class="hover:underline">
+                                <p class="text-sm font-medium truncate">{{ auth()->user()->name }}</p>
+                                <p class="text-xs text-indigo-200 truncate">{{ auth()->user()->roles->first()->display_name ?? 'User' }}</p>
+                            </a>
                         </div>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
